@@ -9,6 +9,11 @@ public class FlutterLockerPlugin: NSObject, PigeonApi, FlutterPlugin {
         let supportedBiometrics = Locker.configuredBiometricsAuthentication
         completion(.success(supportedBiometrics != BiometricsType.none ? true : false))
     }
+
+    func authenticate(request: AuthenticateRequest, completion: @escaping (Result<Bool, Error>) -> Void) {
+            let supportedBiometrics = Locker.shouldUseAuthenticationWithBiometrics(for: "kUniqueIdentifier")
+            completion(.success(supportedBiometrics != BiometricsType.none ? true : false))
+        }
     
     func save(request: SaveSecretRequest, completion: @escaping (Result<Void, Error>) -> Void) {
         Locker.setSecret(request.secret, for: request.key)

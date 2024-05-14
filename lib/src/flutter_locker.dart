@@ -11,6 +11,13 @@ class FlutterLocker {
     return _pigeonApi.canAuthenticate();
   }
 
+  /// Authenticate using Biometrics.
+  ///
+  /// You need to provide a prompt for Android and iOS. Prompt for iOS is used only with TouchID. FaceID uses strings for Info.plist.
+  static Future<bool> authenticate(AuthenticateRequest request) async {
+    return await _pigeonApi.authenticate(request);
+  }
+
   /// Saves the secret.
   ///
   /// On Android prompt is shown, while on iOS there is no need for the prompt when saving.

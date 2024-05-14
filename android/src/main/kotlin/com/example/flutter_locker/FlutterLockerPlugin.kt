@@ -26,6 +26,30 @@ class FlutterLockerPlugin : FlutterPlugin, ActivityAware, PigeonApi {
   override fun canAuthenticate(callback: (Result<Boolean>) -> Unit) {
     callback(Result.success(goldfinger.canAuthenticate(authenticators)))
   }
+  override fun authenticate(request: AuthenticateRequest, callback: (Result<Boolean>) -> Unit) {
+    val prompt = Goldfinger.PromptParams.Builder(activity as FragmentActivity)
+      .allowedAuthenticators(authenticators)
+      .title(request.androidPrompt.title)
+      .description(request.androidPrompt.descriptionLabel)
+      .negativeButtonText(request.androidPrompt.cancelLabel)
+      .build()
+
+    goldfinger.authenticate(prompt, object : Goldfinger.Callback {
+      override fun onResult(goldfingerResult: Goldfinger.Result) {
+        if (goldfingerResult.type() == Goldfinger.Type.SUCCESS) {
+          callback(Result.success(true))
+        } else {
+          callback(Result.success(false))
+        }
+
+      }
+
+      override fun onError(e: java.lang.Exception) {
+        callback(Result.failure(FlutterError(ErrorCodes.OTHER, e.message)))
+      }
+
+    })
+  }
 
   override fun save(request: SaveSecretRequest, callback: (Result<Unit>) -> Unit) {
     val prompt = Goldfinger.PromptParams.Builder(activity as FragmentActivity)

@@ -7,11 +7,20 @@ import 'package:pigeon/pigeon.dart';
   dartOut: 'lib/gen/locker_api.gen.dart',
   swiftOut: 'ios/Classes/FlutterLocker.swift',
   kotlinOut:
-      'android/src/main/kotlin/com/example/flutter_locker/FlutterLocker.kt',
+  'android/src/main/kotlin/com/example/flutter_locker/FlutterLocker.kt',
   kotlinOptions: KotlinOptions(
     package: 'com.example.flutter_locker',
   ),
 ))
+
+/// Data structure for authenticating
+class AuthenticateRequest {
+  AuthenticateRequest(this.key, this.androidPrompt, this.iOsPrompt);
+
+  final String key;
+  final AndroidPrompt androidPrompt;
+  final IOsPrompt iOsPrompt;
+}
 
 /// Data structure for retrieving the saved secret
 class RetrieveSecretRequest {
@@ -56,6 +65,9 @@ class IOsPrompt {
 abstract class PigeonApi {
   @async
   bool canAuthenticate();
+
+  @async
+  bool authenticate(AuthenticateRequest request);
 
   @async
   void save(SaveSecretRequest request);
